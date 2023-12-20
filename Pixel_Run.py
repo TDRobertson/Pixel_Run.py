@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 
+
 # Class to create a screen area display with pre-defined color and title
 class Display:
     def __init__(self, width, height):
@@ -14,23 +15,34 @@ class Display:
         # Set color of screen
         self.screen.fill((90, 130, 155))
 
+
 # Function to draw all surfaces and images to the screen
 def draw_all():
     # Display Backgrounds
     display.screen.blit(sky_background, (0, 0))
     display.screen.blit(ground_background, (0, 300))
     # Display font surface
-    display.screen.blit(font_surface, (200, 100))
-    # Display snail surface
-    display.screen.blit(snail_surface, (snail_x_pos, snail_y_pos))
+    display.screen.blit(font_surface, font_rect)
+    # Display player rect
+    display.screen.blit(player_surface, player_rect)
+    # Display snail rect
+    display.screen.blit(snail_surface, snail_rect)
 
+
+# Function to move obstacles using their x or y positions of the rectangle in the game loop
 def move_obstacles():
-    # Move snail obstacle to the left
-    global snail_x_pos
-    snail_x_pos -= 4
-    # Reset snail obstacle to the right of the screen when it reaches the left edge
-    if snail_x_pos <= -100:
-        snail_x_pos = 800
+    # Move snail obstacle to the left and reset if it reaches the left edge
+    snail_rect.x -= 4
+    if snail_rect.x <= -100:
+        snail_rect.x = 800
+
+def check_collision():
+    # Check if player collides with snail
+    if player_rect.colliderect(snail_rect):
+        # Reset snail position
+        snail_rect.x = 800
+        # Reset player position
+        player_rect.midbottom = (100, 300)
 
 
 # Initialize pygame
@@ -54,20 +66,17 @@ ground_background = pygame.image.load("graphics/ground.png").convert_alpha()
 # display.screen.blit(ground_background, (0, 300))
 
 
-# Surfaces:
-# Create and then display them in the game loop
-# test_surface = pygame.Surface((100, 200))
-# test_surface.fill("red")
-# test_surface2 = pygame.Surface((100, 200))
-# test_surface2.fill("blue")
+# Surfaces and Rectangles:
+# Create and then display them in the game loop using the draw_all() function
 # Font surface
-font_surface = default_font.render("My Game", False, (60, 64, 60)).convert_alpha()
-# Snail surface
+font_surface = default_font.render("Pixel Runner", False, (60, 64, 60)).convert_alpha()
+font_rect = font_surface.get_rect(midbottom=(400, 50))
+# Player Surface and rectangle
+player_surface = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
+player_rect = player_surface.get_rect(midbottom=(100, 300))
+# Snail surface and rectangle
 snail_surface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
-
-# Obstacle Variables:
-# Snail
-snail_x_pos = 680; snail_y_pos = 260
+snail_rect = snail_surface.get_rect(midbottom=(680, 300))
 
 
 # Game loop
@@ -86,6 +95,8 @@ while True:
     draw_all()
     # Move obstacles
     move_obstacles()
+    # Check for collisions
+    check_collision()
 
     # Update display
     pygame.display.update()
