@@ -50,6 +50,23 @@ def check_collision():
         # Set game state to false
         global game_state
         game_state = False
+        # Set game over state to true
+        global game_over
+        game_over = True
+
+
+# Function to display score to screen
+def display_score():
+    global score
+    # get the current time in milliseconds
+    pygame.time.get_ticks()
+    # divide by 1000 to get total seconds
+    score = (pygame.time.get_ticks() // 1000) - start_time
+    # set score surface and rectangle to global variables for use in draw_all() function
+    global score_surface, score_rect
+    # display score surface and rectangle
+    score_surface = default_font.render(f"Score: {score}", False, (64, 64, 64)).convert_alpha()
+    score_rect = score_surface.get_rect(midleft=(3, 25))
 
 
 # Function to reset game
@@ -63,6 +80,69 @@ def reset_game():
         if event.key == pygame.K_SPACE:
             global game_state
             game_state = True
+
+
+# Function to display start screen
+def handle_start_screen():
+    display.screen.fill((90, 130, 155))
+    # Initial Player Icon
+    player_stand_start = pygame.image.load("graphics/Player/p3_stand.png").convert_alpha()
+    # Scale player icon to double size
+    player_stand_start = pygame.transform.scale2x(player_stand_start)
+    # Set player icon to center of screen
+    player_stand_start_rect = player_stand_start.get_rect(center=(400, 200))
+    # Blit player icon to screen
+    display.screen.blit(player_stand_start, player_stand_start_rect)
+    # Instructions to start game
+    start_game_surf = default_font.render("Welcome to the game", True, (60, 64, 60)).convert_alpha()
+    start_game_rect = start_game_surf.get_rect(center=(400, 50))
+    # Blit instructions to screen
+    display.screen.blit(start_game_surf, start_game_rect)
+    # Instructions to start game
+    start_game_instructions_surf = default_font.render("Press Space to Continue", True, (60, 64, 60)).convert_alpha()
+    # Set instructions to center of screen
+    start_game_rect = start_game_instructions_surf.get_rect(center=(400, 340))
+    # Blit instructions to screen
+    display.screen.blit(start_game_instructions_surf, start_game_rect)
+
+
+# Function to display continue screen
+def handle_game_over_screen(score):
+    display.screen.fill((90, 130, 155))
+    # Initial Player Icon
+    player_stand_start = pygame.image.load("graphics/Player/p3_stand.png").convert_alpha()
+    # Scale player icon to double size
+    player_stand_start = pygame.transform.scale2x(player_stand_start)
+    # Set player icon to center of screen
+    player_stand_start_rect = player_stand_start.get_rect(center=(400, 200))
+    # Blit player icon to screen
+    display.screen.blit(player_stand_start, player_stand_start_rect)
+    # Game Over text
+    game_over_surface = default_font.render("Game Over", False, (64, 64, 64)).convert_alpha()
+    game_over_rect = game_over_surface.get_rect(center=(400, 56))
+    # Blit game over text to screen
+    display.screen.blit(game_over_surface, game_over_rect)
+    display.screen.blit(game_over_surface, game_over_rect)
+    # Instructions to start game
+    start_game_instructions_surf = default_font.render("Press Space to Continue", True, (60, 64, 60)).convert_alpha()
+    # Set instructions to center of screen
+    start_game_rect = start_game_instructions_surf.get_rect(center=(400, 360))
+    # Blit instructions to screen
+    display.screen.blit(start_game_instructions_surf, start_game_rect)
+
+    # Display achieved score
+    score_text = default_font.render(f"Score: {score}", False, (64, 64, 64)).convert_alpha()
+    score_rect = score_text.get_rect(center=(400, 320))
+    display.screen.blit(score_text, score_rect)
+
+
+# Function to run the game
+def run_game():
+    global game_state, score, player_gravity, start_time
+    game_state = True
+    score = 0
+    player_gravity = 0
+    start_time = pygame.time.get_ticks() // 1000
 
 
 # def keyboard_input():
@@ -99,11 +179,14 @@ clock = pygame.time.Clock()
 default_font = pygame.font.Font("font/Pixeltype.ttf", 60)
 
 # Variables:
-game_state = True
+game_state = False
+game_over = False
 # Score variable
 score = 0
 # Track gravity
 player_gravity = 0
+# Start time since game started, continues to count even after game over
+start_time = 0
 
 
 # Backgrounds:
@@ -121,15 +204,18 @@ ground_background = pygame.image.load("graphics/ground.png").convert_alpha()
 # Font surface
 font_surface = default_font.render("Pixel Runner", False, (60, 64, 60)).convert_alpha()
 font_rect = font_surface.get_rect(midbottom=(400, 50))
-# Score surface
-score_surface = default_font.render(f"Score: {score}", False, (64, 64, 64)).convert_alpha()
-score_rect = score_surface.get_rect(midleft=(3, 25))
 # Player Surface and rectangle
 player_surface = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
 player_rect = player_surface.get_rect(midbottom=(100, 300))
 # Snail surface and rectangle
 snail_surface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
 snail_rect = snail_surface.get_rect(midbottom=(680, 300))
+
+# Start positions:
+# Snail start position
+snail_rect.x = 680
+# Player start position
+player_rect.midbottom = (100, 300)
 
 
 # Game loop
@@ -143,25 +229,28 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        # If game state is true
+        # Handle events for different game states
         if game_state:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
                     player_gravity = -20
-        # If game state is false
-        if not game_state:
+        elif not game_state:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    # Reset snail position
-                    snail_rect.x = 680
-                    # Reset player position
-                    player_rect.midbottom = (100, 300)
-                    # Set game state to true
-                    game_state = True
+                    run_game()  # Start the game
+        elif game_over:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    run_game()  # Restart the game
 
+    # Clear the screen
+    display.screen.fill((90, 130, 155))
 
-    # If game state is true then run game
+    # Handle different game states
     if game_state:
+        # Run the game
+        # Display score
+        display_score()
         # Apply gravity to player
         player_gravity += 1
         player_rect.y += player_gravity
@@ -174,28 +263,12 @@ while True:
         move_obstacles()
         # Check for collisions
         check_collision()
-
-    if not game_state:
-        # Display game over surface
-        display.screen.fill((90, 130, 155))
-        game_over_surface = default_font.render("Game Over", False, (64, 64, 64)).convert_alpha()
-        game_over_rect = game_over_surface.get_rect(center=(400, 200))
-        display.screen.blit(game_over_surface, game_over_rect)
-
-
-    # # Player gravity and movement
-    # player_gravity += 1
-    # player_rect.y += player_gravity
-    # # Check if player is touching the ground
-    # if player_rect.bottom >= 300:
-    #     player_rect.bottom = 300
-    #
-    # # Draw surfaces and images to screen
-    # draw_all()
-    # # Move obstacles
-    # move_obstacles()
-    # # Check for collisions
-    # check_collision()
+    elif game_over:
+        # Display game over screen
+        handle_game_over_screen(score)
+    else:
+        # Display start screen
+        handle_start_screen()
 
     # Update display
     pygame.display.update()
