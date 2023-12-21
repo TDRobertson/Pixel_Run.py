@@ -1,6 +1,6 @@
 import pygame
 from sys import exit
-
+from random import randint
 
 # Class to create a screen area display with pre-defined color and title
 class Display:
@@ -29,6 +29,34 @@ def draw_all():
     display.screen.blit(player_surface, player_rect)
     # Display snail rect
     display.screen.blit(snail_surface, snail_rect)
+
+
+# Function for obstacle movement
+def obstacle_movement(obstacle_list):
+    # Loop through obstacles in list
+    for obstacle in obstacle_list:
+        # Move obstacles to the left
+        obstacle.x -= 5
+        # Remove obstacles from list if they reach the left edge of the screen
+        if obstacle.x <= -100:
+            obstacle_list.remove(obstacle)
+        # Display obstacles
+        display.screen.blit(snail_surface, obstacle)
+        # Check for collision between player and obstacles
+        if player_rect.colliderect(obstacle):
+            # Reset snail position
+            obstacle.x = 800
+            # Reset player position
+            player_rect.midbottom = (100, 300)
+            # Set game state to false
+            global game_state
+            game_state = False
+            # Set game over state to true
+            global game_over
+            game_over = True
+
+    # Return obstacle list
+    return obstacle_list
 
 
 # Function to move obstacles using their x or y positions of the rectangle in the game loop
@@ -114,7 +142,7 @@ def handle_game_over_screen(score):
     # Scale player icon to double size
     player_stand_start = pygame.transform.scale2x(player_stand_start)
     # Set player icon to center of screen
-    player_stand_start_rect = player_stand_start.get_rect(center=(400, 200))
+    player_stand_start_rect = player_stand_start.get_rect(center=(400, 190))
     # Blit player icon to screen
     display.screen.blit(player_stand_start, player_stand_start_rect)
     # Game Over text
@@ -143,29 +171,6 @@ def run_game():
     score = 0
     player_gravity = 0
     start_time = pygame.time.get_ticks() // 1000
-
-
-# def keyboard_input():
-#     # Check if user presses space bar
-#     if event.type == pygame.KEYDOWN:
-#         print("Key pressed")
-#         # Check if user presses space bar
-#         if event.key == pygame.K_SPACE:
-#             # Check if player is on the ground
-#             global player_gravity
-#             player_gravity = -20
-#         # Check if user presses up arrow key
-#         if event.key == pygame.K_UP:
-#             print("Up arrow pressed")
-#         # Check if user presses down arrow key
-#         if event.key == pygame.K_DOWN:
-#             print("Down arrow pressed")
-
-
-# def apply_gravity():
-#     # Check if player is in the air
-#     if player_rect.bottom < 300:
-#         player_rect.y += 1
 
 
 # Initialize pygame
@@ -207,9 +212,14 @@ font_rect = font_surface.get_rect(midbottom=(400, 50))
 # Player Surface and rectangle
 player_surface = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
 player_rect = player_surface.get_rect(midbottom=(100, 300))
+
+# Obstacle surfaces and rectangles
 # Snail surface and rectangle
 snail_surface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
 snail_rect = snail_surface.get_rect(midbottom=(680, 300))
+
+# Obstacles list
+obstacles_list = []
 
 # Start positions:
 # Snail start position
@@ -217,6 +227,10 @@ snail_rect.x = 680
 # Player start position
 player_rect.midbottom = (100, 300)
 
+# Timers:
+# Obstacle_timer
+obstacle_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(obstacle_timer, 1500)
 
 # Game loop
 while True:
@@ -243,6 +257,11 @@ while True:
                 if event.key == pygame.K_RETURN:
                     run_game()  # Restart the game
 
+        # Check if obstacle timer is triggered
+        if event.type == obstacle_timer and game_state:
+            # Create snail obstacle
+            obstacles_list.append(snail_surface.get_rect(midbottom=(randint(870, 1200), 300)))
+
     # Clear the screen
     display.screen.fill((90, 130, 155))
 
@@ -263,6 +282,18 @@ while True:
         move_obstacles()
         # Check for collisions
         check_collision()
+        # Obstacle movement
+        # for obstacle in obstacles_list:
+        #     # Move obstacles to the left
+        #     obstacle.x -= 4
+        #     # Remove obstacles from list if they reach the left edge of the screen
+        #     if obstacle.x <= -100:
+        #         obstacles_list.remove(obstacle)
+        #     # Display obstacles
+        #     display.screen.blit(snail_surface, obstacle)
+
+        obstacle_list = obstacle_movement(obstacles_list)
+
     elif game_over:
         # Display game over screen
         handle_game_over_screen(score)
