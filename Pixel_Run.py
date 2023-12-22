@@ -18,6 +18,58 @@ class Display:
         self.screen.fill((90, 130, 155))
 
 
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        # Player walking animation
+        self.player_walk_1 = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
+        self.player_walk_2 = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk04.png").convert_alpha()
+        self.player_walk_3 = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk05.png").convert_alpha()
+        # Player walk list
+        self.player_walk_list = [self.player_walk_1, self.player_walk_2, self.player_walk_3]
+        # Index for player walk list
+        self.player_walk_index = 0
+        # Player jump animation
+        self.player_jump = pygame.image.load("graphics/Player/p3_jump.png").convert_alpha()
+        # Player Surface and rectangle
+        self.image = self.player_walk_list[self.player_walk_index]
+        self.rect = self.image.get_rect(midbottom=(250, 300))
+        self.player_gravity = 0
+
+    # Player animation function to animate player sprite group
+    def player_animation(self):
+        # Check if player is touching the ground
+        if self.rect.bottom < 300:
+            self.image = self.player_jump
+        else:
+            # Animate player walking
+            self.player_walk_index += 0.1
+            if self.player_walk_index >= len(self.player_walk_list):
+                self.player_walk_index = 0
+            self.image = self.player_walk_list[int(self.player_walk_index)]
+
+    # Player input function to check for user input
+    def player_input(self):
+        keys = pygame.key.get_pressed()
+        # Check that game state is true
+        if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
+            self.player_gravity = -20
+
+    # Function to apply gravity to player and check if player is touching the ground
+    def apply_gravity(self):
+        self.player_gravity += 1
+        self.rect.y += self.player_gravity
+        # Check if player is touching the ground
+        if self.rect.bottom >= 300:
+            self.rect.bottom = 300
+
+    # Update player sprite group ran in game loop
+    def update(self):
+        # Run all player methods
+        self.player_input()
+        self.apply_gravity()
+        self.player_animation()
+
 # Function to draw all surfaces and images to the screen
 def draw_all():
     # Display Backgrounds
@@ -214,6 +266,9 @@ score = 0
 player_gravity = 0
 # Start time since game started, continues to count even after game over
 start_time = 0
+# Player sprite group
+player_group = pygame.sprite.GroupSingle()
+player_group.add(Player())
 
 
 # Backgrounds:
@@ -356,11 +411,14 @@ while True:
         # Check if player is touching the ground
         if player_rect.bottom >= 300:
             player_rect.bottom = 300
-
         # Draw surfaces and images to screen
         draw_all()
         # Player animation
         player_animation()
+        # Player draw method
+        player_group.draw(display.screen)
+        # Update player
+        player_group.update()
         # Move obstacles
         obstacles_rect_list = obstacle_movement(obstacles_rect_list)
         # Check for collisions
