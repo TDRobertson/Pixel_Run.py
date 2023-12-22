@@ -3,6 +3,7 @@ from sys import exit
 from random import randint
 from random import choice
 
+
 # Class to create a screen area display with pre-defined color and title
 class Display:
     def __init__(self, width, height):
@@ -46,25 +47,49 @@ def move_obstacles():
         fly_rect.x = 800
 
 
-# Function to check for collisions between player and obstacles
-def check_collision():
-    # Check if player collides with snail
-    if player_rect.colliderect(snail_rect):
-        # Reset snail position
-        snail_rect.x = 800
-    # Check if player collides with fly
-    if player_rect.colliderect(fly_rect):
-        # Reset fly position
-        fly_rect.x = 1000
+def obstacle_movement(obstacle_list):
+    if obstacle_list:
+        for obstacle_rect in obstacle_list:
+            # Move obstacle to the left
+            obstacle_rect.x -= 5
+            # Draw obstacle to screen
+            if obstacle_rect.bottom == 300:
+                display.screen.blit(snail_surface, obstacle_rect)
+            elif obstacle_rect.bottom == 190:
+                display.screen.blit(fly_surface, obstacle_rect)
+            # Remove obstacle from list if it reaches the left edge
+        obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.x > -100]
+        return obstacle_list
+    else:
+        return []
 
-        # Reset player position
-        player_rect.midbottom = (100, 300)
-        # Set game state to false
-        global game_state
-        game_state = False
-        # Set game over state to true
-        global game_over
-        game_over = True
+
+# Function to check for collisions between player and obstacles
+def check_collision(player, obstacles):
+    # Check for collisions between player and obstacles
+    if obstacles:
+        for obstacle_rect in obstacles:
+            if player_rect.colliderect(obstacle_rect):
+                # Reset player position
+                player_rect.midbottom = (100, 300)
+                # Set player gravity to 0
+                global player_gravity
+                player_gravity = 0
+                # Set game state to false
+                return False
+                # Clear obstacles list
+    return True
+                # # Reset snail position
+                # snail_rect.x = 680
+                #
+                # # Reset player position
+                # player_rect.midbottom = (100, 300)
+                # # Set game state to false
+                # global game_state
+                # game_state = False
+                # # Set game over state to true
+                # global game_over
+                # game_over = True
 
 
 # Function to display score to screen
@@ -206,7 +231,7 @@ fly_surface = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
 fly_rect = fly_surface.get_rect(midbottom=(1000, 190))
 
 # Obstacles list
-obstacles_list = []
+obstacles_rect_list = []
 
 # Start positions:
 # Snail start position
@@ -243,6 +268,16 @@ while True:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     run_game()  # Restart the game
+        # Check if obstacle timer has been reached
+        if event.type == obstacle_timer and game_state:
+            # Choose random obstacle to add to list
+            random_obstacle = choice(["snail", "fly"])
+            # Add snail to obstacle list
+            if random_obstacle == "snail":
+                obstacles_rect_list.append(snail_surface.get_rect(midbottom=(randint(900, 1100), 300)))
+            # Add fly to obstacle list
+            if random_obstacle == "fly":
+                obstacles_rect_list.append(fly_surface.get_rect(midbottom=(randint(900, 1100), 190)))
 
     # Clear the screen
     display.screen.fill((90, 130, 155))
@@ -261,16 +296,20 @@ while True:
         # Draw surfaces and images to screen
         draw_all()
         # Move obstacles
-        move_obstacles()
+        obstacles_rect_list = obstacle_movement(obstacles_rect_list)
         # Check for collisions
-        check_collision()
+        game_state = check_collision(player_rect, obstacles_rect_list)
 
     elif game_over:
         # Display game over screen
         handle_game_over_screen(score)
+        # Clear obstacles list
+        obstacles_rect_list.clear()
     else:
         # Display start screen
         handle_start_screen()
+        # Clear obstacles list
+        obstacles_rect_list.clear()
 
     # Update display
     pygame.display.update()
