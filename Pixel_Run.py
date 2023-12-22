@@ -70,6 +70,45 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.player_animation()
 
+# Obstacle class
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self, type):
+        super().__init__()
+        self.type = type  # Store the type of obstacle
+        self.animation_index = 0  # Animation index for both snail and fly
+        self.image = None
+        self.rect = None
+        self.init_obstacle()
+
+    def init_obstacle(self):
+        if self.type == "snail":
+            # Snail animations
+            self.image = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+            self.animation_frames = [self.image, pygame.image.load("graphics/snail/snail2.png").convert_alpha()]
+            self.rect = self.image.get_rect(midbottom=(randint(900, 1100), 300))
+        elif self.type == "fly":
+            # Fly animations
+            self.image = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
+            self.animation_frames = [self.image, pygame.image.load("graphics/Fly/Fly2.png").convert_alpha()]
+            self.rect = self.image.get_rect(midbottom=(randint(900, 1100), 190))
+        # Add more types of obstacles here as needed
+
+    def obstacle_animation(self):
+        self.animation_index += 0.1
+        if self.animation_index >= len(self.animation_frames):
+            self.animation_index = 0
+        self.image = self.animation_frames[int(self.animation_index)]
+
+    def remove(self):
+        if self.rect.x <= -100:
+            self.kill()
+
+    def update(self):
+        self.obstacle_animation()
+        self.rect.x -= 5
+        self.remove()
+
+
 # Function to draw all surfaces and images to the screen
 def draw_all():
     # Display Backgrounds
@@ -269,6 +308,9 @@ start_time = 0
 # Player sprite group
 player_group = pygame.sprite.GroupSingle()
 player_group.add(Player())
+# Obstacle sprite group
+obstacle_group = pygame.sprite.Group()
+
 
 
 # Backgrounds:
@@ -373,29 +415,32 @@ while True:
                     run_game()  # Restart the game
         # Check if obstacle timer has been reached
         if event.type == obstacle_timer and game_state:
-            # Choose random obstacle to add to list
-            random_obstacle = choice(["snail", "fly"])
-            # Add snail to obstacle list
-            if random_obstacle == "snail":
-                obstacles_rect_list.append(snail_surface.get_rect(midbottom=(randint(900, 1100), 300)))
-            # Add fly to obstacle list
-            if random_obstacle == "fly":
-                obstacles_rect_list.append(fly_surface.get_rect(midbottom=(randint(900, 1100), 190)))
-        # Check if animation timer has been reached
-        if event.type == snail_animation_timer:
-            # Animate snail
-            if snail_index == 0:
-                snail_index = 1
-            else:
-                snail_index = 0
-            snail_surface = snail_frame_list[snail_index]
-        if event.type == fly_animation_timer:
-            # Animate fly
-            if fly_index == 0:
-                fly_index = 1
-            else:
-                fly_index = 0
-            fly_surface = fly_frame_list[fly_index]
+            # Choose random obstacle to add to list using obstacle group
+            obstacle_group.add(Obstacle(choice(["snail", "fly"])))
+
+        #     # Choose random obstacle to add to list
+        #     random_obstacle = choice(["snail", "fly"])
+        #     # Add snail to obstacle list
+        #     if random_obstacle == "snail":
+        #         obstacles_rect_list.append(snail_surface.get_rect(midbottom=(randint(900, 1100), 300)))
+        #     # Add fly to obstacle list
+        #     if random_obstacle == "fly":
+        #         obstacles_rect_list.append(fly_surface.get_rect(midbottom=(randint(900, 1100), 190)))
+        # # Check if animation timer has been reached
+        # if event.type == snail_animation_timer:
+        #     # Animate snail
+        #     if snail_index == 0:
+        #         snail_index = 1
+        #     else:
+        #         snail_index = 0
+        #     snail_surface = snail_frame_list[snail_index]
+        # if event.type == fly_animation_timer:
+        #     # Animate fly
+        #     if fly_index == 0:
+        #         fly_index = 1
+        #     else:
+        #         fly_index = 0
+        #     fly_surface = fly_frame_list[fly_index]
 
     # Clear the screen
     display.screen.fill((90, 130, 155))
@@ -415,10 +460,14 @@ while True:
         draw_all()
         # Player animation
         player_animation()
-        # Player draw method
+        # Player draw group method
         player_group.draw(display.screen)
-        # Update player
+        # Update player group
         player_group.update()
+        # Obstacle draw group method
+        obstacle_group.draw(display.screen)
+        # Update obstacle group
+        obstacle_group.update()
         # Move obstacles
         obstacles_rect_list = obstacle_movement(obstacles_rect_list)
         # Check for collisions
