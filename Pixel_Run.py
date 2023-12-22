@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 from random import randint
+from random import choice
 
 # Class to create a screen area display with pre-defined color and title
 class Display:
@@ -29,42 +30,20 @@ def draw_all():
     display.screen.blit(player_surface, player_rect)
     # Display snail rect
     display.screen.blit(snail_surface, snail_rect)
-
-
-# Function for obstacle movement
-def obstacle_movement(obstacle_list):
-    # Loop through obstacles in list
-    for obstacle in obstacle_list:
-        # Move obstacles to the left
-        obstacle.x -= 5
-        # Remove obstacles from list if they reach the left edge of the screen
-        if obstacle.x <= -100:
-            obstacle_list.remove(obstacle)
-        # Display obstacles
-        display.screen.blit(snail_surface, obstacle)
-        # Check for collision between player and obstacles
-        if player_rect.colliderect(obstacle):
-            # Reset snail position
-            obstacle.x = 800
-            # Reset player position
-            player_rect.midbottom = (100, 300)
-            # Set game state to false
-            global game_state
-            game_state = False
-            # Set game over state to true
-            global game_over
-            game_over = True
-
-    # Return obstacle list
-    return obstacle_list
+    # Display fly rect
+    display.screen.blit(fly_surface, fly_rect)
 
 
 # Function to move obstacles using their x or y positions of the rectangle in the game loop
 def move_obstacles():
     # Move snail obstacle to the left and reset if it reaches the left edge
-    snail_rect.x -= 4
+    snail_rect.x -= 5
     if snail_rect.x <= -100:
         snail_rect.x = 800
+    # Move fly obstacle to the left and reset if it reaches the left edge
+    fly_rect.x -= 5
+    if fly_rect.x <= -100:
+        fly_rect.x = 800
 
 
 # Function to check for collisions between player and obstacles
@@ -73,6 +52,11 @@ def check_collision():
     if player_rect.colliderect(snail_rect):
         # Reset snail position
         snail_rect.x = 800
+    # Check if player collides with fly
+    if player_rect.colliderect(fly_rect):
+        # Reset fly position
+        fly_rect.x = 1000
+
         # Reset player position
         player_rect.midbottom = (100, 300)
         # Set game state to false
@@ -217,6 +201,9 @@ player_rect = player_surface.get_rect(midbottom=(100, 300))
 # Snail surface and rectangle
 snail_surface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
 snail_rect = snail_surface.get_rect(midbottom=(680, 300))
+# Fly surface and rectangle
+fly_surface = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
+fly_rect = fly_surface.get_rect(midbottom=(1000, 190))
 
 # Obstacles list
 obstacles_list = []
@@ -257,11 +244,6 @@ while True:
                 if event.key == pygame.K_RETURN:
                     run_game()  # Restart the game
 
-        # Check if obstacle timer is triggered
-        if event.type == obstacle_timer and game_state:
-            # Create snail obstacle
-            obstacles_list.append(snail_surface.get_rect(midbottom=(randint(870, 1200), 300)))
-
     # Clear the screen
     display.screen.fill((90, 130, 155))
 
@@ -282,17 +264,6 @@ while True:
         move_obstacles()
         # Check for collisions
         check_collision()
-        # Obstacle movement
-        # for obstacle in obstacles_list:
-        #     # Move obstacles to the left
-        #     obstacle.x -= 4
-        #     # Remove obstacles from list if they reach the left edge of the screen
-        #     if obstacle.x <= -100:
-        #         obstacles_list.remove(obstacle)
-        #     # Display obstacles
-        #     display.screen.blit(snail_surface, obstacle)
-
-        obstacle_list = obstacle_movement(obstacles_list)
 
     elif game_over:
         # Display game over screen
