@@ -27,12 +27,6 @@ def draw_all():
     display.screen.blit(font_surface, font_rect)
     # Display score surface
     display.screen.blit(score_surface, score_rect)
-    # Display player rect
-    display.screen.blit(player_surface, player_rect)
-    # Display snail rect
-    display.screen.blit(snail_surface, snail_rect)
-    # Display fly rect
-    display.screen.blit(fly_surface, fly_rect)
 
 
 # Function to move obstacles using their x or y positions of the rectangle in the game loop
@@ -78,6 +72,8 @@ def check_collision(player, obstacles):
                 # Set game state to false
                 return False
                 # Clear obstacles list
+
+
     return True
                 # # Reset snail position
                 # snail_rect.x = 680
@@ -90,6 +86,23 @@ def check_collision(player, obstacles):
                 # # Set game over state to true
                 # global game_over
                 # game_over = True
+
+
+# Player animation function
+def player_animation():
+    # Set player surface to global variable for use in draw_all() function
+    global player_surface, player_walk_index
+    # Check if player is touching the ground
+    if player_rect.bottom < 300:
+        player_surface = player_jump
+    else:
+        # Animate player walking
+        player_walk_index += 0.1
+        if player_walk_index >= len(player_walk_list):
+            player_walk_index = 0
+        player_surface = player_walk_list[int(player_walk_index)]
+    # Display player surface
+    display.screen.blit(player_surface, player_rect)
 
 
 # Function to display score to screen
@@ -204,13 +217,10 @@ start_time = 0
 
 
 # Backgrounds:
+# Sky background
 sky_background = pygame.image.load("graphics/Sky.png").convert_alpha()
-# display sky background
-# display.screen.blit(sky_background, (0, 0))
 # ground background
 ground_background = pygame.image.load("graphics/ground.png").convert_alpha()
-# display ground background
-# display.screen.blit(ground_background, (0, 300))
 
 
 # Surfaces and Rectangles:
@@ -219,16 +229,46 @@ ground_background = pygame.image.load("graphics/ground.png").convert_alpha()
 font_surface = default_font.render("Pixel Runner", False, (60, 64, 60)).convert_alpha()
 font_rect = font_surface.get_rect(midbottom=(400, 50))
 # Player Surface and rectangle
-player_surface = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
+player_stand_surface = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
+# player_rect = player_stand_surface.get_rect(midbottom=(100, 300))
+# Player walking animation
+player_walk_1 = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
+player_walk_2 = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk04.png").convert_alpha()
+player_walk_3 = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk05.png").convert_alpha()
+# Player walk list
+player_walk_list = [player_walk_1, player_walk_2, player_walk_3]
+# Index for player walk list
+player_walk_index = 0
+# Player jump animation
+player_jump = pygame.image.load("graphics/Player/p3_jump.png").convert_alpha()
+# Player surface
+player_surface = player_walk_list[player_walk_index]
+# Player rectangle
 player_rect = player_surface.get_rect(midbottom=(100, 300))
 
 # Obstacle surfaces and rectangles
 # Snail surface and rectangle
-snail_surface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+# Snail animations
+snail_frame_1 = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+snail_frame_2 = pygame.image.load("graphics/snail/snail2.png").convert_alpha()
+snail_frame_list = [snail_frame_1, snail_frame_2]
+# Snail index
+snail_index = 0
+# Snail surface
+snail_surface = snail_frame_list[snail_index]
 snail_rect = snail_surface.get_rect(midbottom=(680, 300))
+
 # Fly surface and rectangle
-fly_surface = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
+# Fly animations
+fly_frame_1 = pygame.image.load("graphics/Fly/Fly1.png").convert_alpha()
+fly_frame_2 = pygame.image.load("graphics/Fly/Fly2.png").convert_alpha()
+fly_frame_list = [fly_frame_1, fly_frame_2]
+# Fly index
+fly_index = 0
+# Fly surface
+fly_surface = fly_frame_list[fly_index]
 fly_rect = fly_surface.get_rect(midbottom=(1000, 190))
+
 
 # Obstacles list
 obstacles_rect_list = []
@@ -243,6 +283,12 @@ player_rect.midbottom = (100, 300)
 # Obstacle_timer
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer, 1500)
+# Snail animation timer
+snail_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(snail_animation_timer, 495)
+# Fly animation timer
+fly_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(fly_animation_timer, 330)
 
 # Game loop
 while True:
@@ -260,10 +306,12 @@ while True:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
                     player_gravity = -20
+        # Check if user presses space bar to start game
         elif not game_state:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     run_game()  # Start the game
+        # Check if user presses space bar to restart game
         elif game_over:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -278,6 +326,21 @@ while True:
             # Add fly to obstacle list
             if random_obstacle == "fly":
                 obstacles_rect_list.append(fly_surface.get_rect(midbottom=(randint(900, 1100), 190)))
+        # Check if animation timer has been reached
+        if event.type == snail_animation_timer:
+            # Animate snail
+            if snail_index == 0:
+                snail_index = 1
+            else:
+                snail_index = 0
+            snail_surface = snail_frame_list[snail_index]
+        if event.type == fly_animation_timer:
+            # Animate fly
+            if fly_index == 0:
+                fly_index = 1
+            else:
+                fly_index = 0
+            fly_surface = fly_frame_list[fly_index]
 
     # Clear the screen
     display.screen.fill((90, 130, 155))
@@ -293,8 +356,11 @@ while True:
         # Check if player is touching the ground
         if player_rect.bottom >= 300:
             player_rect.bottom = 300
+
         # Draw surfaces and images to screen
         draw_all()
+        # Player animation
+        player_animation()
         # Move obstacles
         obstacles_rect_list = obstacle_movement(obstacles_rect_list)
         # Check for collisions
