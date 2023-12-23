@@ -212,11 +212,16 @@ def draw_background():
     # Display Backgrounds
     display.screen.blit(sky_background, (0, 0))
     display.screen.blit(ground_background, (0, 300))
+    # Draw two copies of the sky background to create a continuous scrolling effect
+    display.screen.blit(sky_background, (sky_x_pos, 0))
+    display.screen.blit(sky_background, (sky_x_pos + sky_background.get_width(), 0))
+    # Draw two copies of the ground background to create a continuous scrolling effect
+    display.screen.blit(ground_background, (ground_x_pos, 300))
+    display.screen.blit(ground_background, (ground_x_pos + ground_background.get_width(), 300))
     # Display font surface
     display.screen.blit(font_surface, font_rect)
     # Display score surface
     display.screen.blit(score_surface, score_rect)
-
 
 # Function to display score to screen
 def display_score():
@@ -228,7 +233,7 @@ def display_score():
     # set score surface and rectangle to global variables for use in draw_all() function
     global score_surface, score_rect
     # display score surface and rectangle
-    score_surface = default_font.render(f"Score: {score}", False, (64, 64, 64)).convert_alpha()
+    score_surface = score_font.render(f"Score: {score}", False, (64, 64, 64)).convert_alpha()
     score_rect = score_surface.get_rect(midleft=(3, 25))
 
 
@@ -311,6 +316,8 @@ display = Display(800, 400)
 clock = pygame.time.Clock()
 # Games font style
 default_font = pygame.font.Font("font/Pixeltype.ttf", 60)
+# Score and title font
+score_font = pygame.font.Font("font/Pixeltype.ttf", 45)
 
 # Variables:
 game_state = False
@@ -342,15 +349,19 @@ obstacle_group = pygame.sprite.Group()
 # Backgrounds:
 # Sky background
 sky_background = pygame.image.load("graphics/Sky.png").convert_alpha()
+# Sly background x position
+sky_x_pos = 0
 # ground background
 ground_background = pygame.image.load("graphics/ground.png").convert_alpha()
+# ground background x position
+ground_x_pos = 0
 
 
 # Surfaces and Rectangles:
 # Create and then display them in the game loop using the draw_all() function
 # Font surface
-font_surface = default_font.render("Pixel Runner", False, (60, 64, 60)).convert_alpha()
-font_rect = font_surface.get_rect(midbottom=(400, 50))
+font_surface = score_font.render("Pixel Runner", False, (60, 64, 60)).convert_alpha()
+font_rect = font_surface.get_rect(midbottom=(400, 40))
 # Player Surface and rectangle
 player_stand_surface = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.png").convert_alpha()
 
@@ -397,8 +408,23 @@ while True:
             # Add the selected obstacle to the obstacle group
             obstacle_group.add(Obstacle(obstacle_type))
 
+    # Sky background movement
+    sky_x_pos -= 0.5
+    # Check if sky background has reached the end of the screen
+    if sky_x_pos <= -sky_background.get_width():
+        sky_x_pos = 0
+
+    # Ground background movement
+    ground_x_pos -= 4
+    # Check if ground background has reached the end of the screen
+    if ground_x_pos <= -ground_background.get_width():
+        ground_x_pos = 0
+
+
     # Clear the screen
     display.screen.fill((90, 130, 155))
+
+
 
     # Handle different game states
     if game_state:
