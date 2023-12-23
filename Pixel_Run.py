@@ -1,7 +1,7 @@
 import pygame
 from sys import exit
 from random import randint
-from random import choice
+from random import choices
 
 
 # Class to create a screen area display with pre-defined color and title
@@ -110,7 +110,7 @@ class Obstacle(pygame.sprite.Sprite):
 
 
 # Function to draw all surfaces and images to the screen
-def draw_all():
+def draw_background():
     # Display Backgrounds
     display.screen.blit(sky_background, (0, 0))
     display.screen.blit(ground_background, (0, 300))
@@ -118,18 +118,6 @@ def draw_all():
     display.screen.blit(font_surface, font_rect)
     # Display score surface
     display.screen.blit(score_surface, score_rect)
-
-
-# Function to move obstacles using their x or y positions of the rectangle in the game loop
-def move_obstacles():
-    # Move snail obstacle to the left and reset if it reaches the left edge
-    snail_rect.x -= 5
-    if snail_rect.x <= -100:
-        snail_rect.x = 800
-    # Move fly obstacle to the left and reset if it reaches the left edge
-    fly_rect.x -= 5
-    if fly_rect.x <= -100:
-        fly_rect.x = 800
 
 
 def obstacle_movement(obstacle_list):
@@ -177,23 +165,6 @@ def check_collision(player, obstacles):
                 # # Set game over state to true
                 # global game_over
                 # game_over = True
-
-
-# Player animation function
-def player_animation():
-    # Set player surface to global variable for use in draw_all() function
-    global player_surface, player_walk_index
-    # Check if player is touching the ground
-    if player_rect.bottom < 300:
-        player_surface = player_jump
-    else:
-        # Animate player walking
-        player_walk_index += 0.1
-        if player_walk_index >= len(player_walk_list):
-            player_walk_index = 0
-        player_surface = player_walk_list[int(player_walk_index)]
-    # Display player surface
-    display.screen.blit(player_surface, player_rect)
 
 
 # Function to display score to screen
@@ -367,15 +338,6 @@ fly_surface = fly_frame_list[fly_index]
 fly_rect = fly_surface.get_rect(midbottom=(1000, 190))
 
 
-# Obstacles list
-obstacles_rect_list = []
-
-# Start positions:
-# Snail start position
-snail_rect.x = 680
-# Player start position
-player_rect.midbottom = (100, 300)
-
 # Timers:
 # Obstacle_timer
 obstacle_timer = pygame.USEREVENT + 1
@@ -398,11 +360,6 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        # Handle events for different game states
-        if game_state:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
-                    player_gravity = -20
         # Check if user presses space bar to start game
         elif not game_state:
             if event.type == pygame.KEYDOWN:
@@ -416,50 +373,23 @@ while True:
         # Check if obstacle timer has been reached
         if event.type == obstacle_timer and game_state:
             # Choose random obstacle to add to list using obstacle group
-            obstacle_group.add(Obstacle(choice(["snail", "fly"])))
-
-        #     # Choose random obstacle to add to list
-        #     random_obstacle = choice(["snail", "fly"])
-        #     # Add snail to obstacle list
-        #     if random_obstacle == "snail":
-        #         obstacles_rect_list.append(snail_surface.get_rect(midbottom=(randint(900, 1100), 300)))
-        #     # Add fly to obstacle list
-        #     if random_obstacle == "fly":
-        #         obstacles_rect_list.append(fly_surface.get_rect(midbottom=(randint(900, 1100), 190)))
-        # # Check if animation timer has been reached
-        # if event.type == snail_animation_timer:
-        #     # Animate snail
-        #     if snail_index == 0:
-        #         snail_index = 1
-        #     else:
-        #         snail_index = 0
-        #     snail_surface = snail_frame_list[snail_index]
-        # if event.type == fly_animation_timer:
-        #     # Animate fly
-        #     if fly_index == 0:
-        #         fly_index = 1
-        #     else:
-        #         fly_index = 0
-        #     fly_surface = fly_frame_list[fly_index]
+            # Define obstacle types and their corresponding probabilities
+            obstacle_types = ["snail", "fly"]
+            probabilities = [0.75, 0.25]  # Adjust these probabilities as needed
+            # Randomly choose the type of obstacle based on probabilities
+            obstacle_type = choices(obstacle_types, probabilities, k=1)[0]
+            # Add the selected obstacle to the obstacle group
+            obstacle_group.add(Obstacle(obstacle_type))
 
     # Clear the screen
     display.screen.fill((90, 130, 155))
 
     # Handle different game states
     if game_state:
-        # Run the game
         # Display score
         display_score()
-        # Apply gravity to player
-        player_gravity += 1
-        player_rect.y += player_gravity
-        # Check if player is touching the ground
-        if player_rect.bottom >= 300:
-            player_rect.bottom = 300
-        # Draw surfaces and images to screen
-        draw_all()
-        # Player animation
-        player_animation()
+        # Draw backgrounds and surfaces
+        draw_background()
         # Player draw group method
         player_group.draw(display.screen)
         # Update player group
@@ -468,21 +398,17 @@ while True:
         obstacle_group.draw(display.screen)
         # Update obstacle group
         obstacle_group.update()
-        # Move obstacles
-        obstacles_rect_list = obstacle_movement(obstacles_rect_list)
-        # Check for collisions
-        game_state = check_collision(player_rect, obstacles_rect_list)
 
     elif game_over:
         # Display game over screen
         handle_game_over_screen(score)
-        # Clear obstacles list
-        obstacles_rect_list.clear()
+        # # Clear obstacles list
+        # obstacles_rect_list.clear()
     else:
         # Display start screen
         handle_start_screen()
-        # Clear obstacles list
-        obstacles_rect_list.clear()
+        # # Clear obstacles list
+        # obstacles_rect_list.clear()
 
     # Update display
     pygame.display.update()
