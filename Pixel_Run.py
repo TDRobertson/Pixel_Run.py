@@ -78,6 +78,7 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.player_animation()
 
+
 # Obstacle class
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
@@ -106,7 +107,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.image = pygame.image.load("graphics/Enemies/slimeWalk2.png").convert_alpha()
             self.animation_frames = [self.image, pygame.image.load("graphics/Enemies/slimeWalk1.png").convert_alpha()]
             self.rect = self.image.get_rect(midbottom=(randint(900, 1100), 300))
-        elif self.type =="flyfly":
+        elif self.type == "flyfly":
             # Fly animations
             self.image = pygame.image.load("graphics/Enemies/flyFly1.png").convert_alpha()
             self.animation_frames = [self.image, pygame.image.load("graphics/Enemies/flyFly2.png").convert_alpha()]
@@ -222,6 +223,7 @@ def draw_background():
     display.screen.blit(font_surface, font_rect)
     # Display score surface
     display.screen.blit(score_surface, score_rect)
+
 
 # Function to display score to screen
 def display_score():
@@ -420,11 +422,8 @@ while True:
     if ground_x_pos <= -ground_background.get_width():
         ground_x_pos = 0
 
-
     # Clear the screen
     display.screen.fill((90, 130, 155))
-
-
 
     # Handle different game states
     if game_state:
