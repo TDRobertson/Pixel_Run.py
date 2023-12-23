@@ -59,13 +59,13 @@ class Player(pygame.sprite.Sprite):
         # Check that game state is true
         if game_state:
             if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
-                self.player_gravity = -18
+                self.player_gravity = -12
                 # Play jump sound when player jumps
                 self.jump_sound.play()
 
     # Function to apply gravity to player and check if player is touching the ground
     def apply_gravity(self):
-        self.player_gravity += 1
+        self.player_gravity += 0.5
         self.rect.y += self.player_gravity
         # Check if player is touching the ground
         if self.rect.bottom >= 300:
