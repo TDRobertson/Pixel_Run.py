@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite):
         # Check that game state is true
         if game_state:
             if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
-                self.player_gravity = -20
+                self.player_gravity = -18
                 # Play jump sound when player jumps
                 self.jump_sound.play()
 
@@ -102,10 +102,29 @@ class Obstacle(pygame.sprite.Sprite):
         # Add more types of obstacles here as needed
 
     def obstacle_animation(self):
-        self.animation_index += 0.1
-        if self.animation_index >= len(self.animation_frames):
-            self.animation_index = 0
-        self.image = self.animation_frames[int(self.animation_index)]
+        # Animate the obstacles
+        # Check if obstacle is a snail
+        if self.type == "snail":
+            # Animate snail
+            self.animation_index += 0.04
+            if self.animation_index >= len(self.animation_frames):
+                self.animation_index = 0
+            self.image = self.animation_frames[int(self.animation_index)]
+        # Check if obstacle is a fly
+        elif self.type == "fly":
+            # Animate Fly
+            self.animation_index += 0.1
+            if self.animation_index >= len(self.animation_frames):
+                self.animation_index = 0
+            self.image = self.animation_frames[int(self.animation_index)]
+
+        # For any other types of obstacles
+        # Animate the obstacles
+        else:
+            self.animation_index += 0.1
+            if self.animation_index >= len(self.animation_frames):
+                self.animation_index = 0
+            self.image = self.animation_frames[int(self.animation_index)]
 
     def remove(self):
         if self.rect.x <= -100:
@@ -113,7 +132,7 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.obstacle_animation()
-        self.rect.x -= 5
+        self.rect.x -= 6
         self.remove()
 
 
@@ -127,6 +146,10 @@ def collision_sprite_group():
         global game_state, game_over
         game_state = False
         game_over = True
+        # Reset player position to initial position
+        global player_gravity
+        player_group.sprite.rect.midbottom = (100, 300)
+        player_gravity = 0
 
 
 # Function to draw all surfaces to the screen
