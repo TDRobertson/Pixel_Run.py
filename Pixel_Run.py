@@ -87,6 +87,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.image = None
         self.rect = None
         self.init_obstacle()
+        self.fly_direction = 1  # Direction of flying units
 
     def init_obstacle(self):
         if self.type == "snail":
@@ -100,6 +101,21 @@ class Obstacle(pygame.sprite.Sprite):
             self.animation_frames = [self.image, pygame.image.load("graphics/Fly/Fly2.png").convert_alpha()]
             self.rect = self.image.get_rect(midbottom=(randint(900, 1100), 190))
         # Add more types of obstacles here as needed
+        elif self.type == "slime":
+            # Slime animations
+            self.image = pygame.image.load("graphics/Enemies/slimeWalk2.png").convert_alpha()
+            self.animation_frames = [self.image, pygame.image.load("graphics/Enemies/slimeWalk1.png").convert_alpha()]
+            self.rect = self.image.get_rect(midbottom=(randint(900, 1100), 300))
+        elif self.type =="flyfly":
+            # Fly animations
+            self.image = pygame.image.load("graphics/Enemies/flyFly1.png").convert_alpha()
+            self.animation_frames = [self.image, pygame.image.load("graphics/Enemies/flyFly2.png").convert_alpha()]
+            self.rect = self.image.get_rect(midbottom=(randint(900, 1100), 50))
+        elif self.type == "Bee":
+            # Bee animations
+            self.image = pygame.image.load("Platformer Art Complete Pack/Extra animations and enemies/Enemy sprites/bee.png").convert_alpha()
+            self.animation_frames = [self.image, pygame.image.load("Platformer Art Complete Pack/Extra animations and enemies/Enemy sprites/bee_fly.png").convert_alpha()]
+            self.rect = self.image.get_rect(midbottom=(randint(900, 1100), 80))
 
     def obstacle_animation(self):
         # Animate the obstacles
@@ -114,6 +130,25 @@ class Obstacle(pygame.sprite.Sprite):
         elif self.type == "fly":
             # Animate Fly
             self.animation_index += 0.1
+            if self.animation_index >= len(self.animation_frames):
+                self.animation_index = 0
+            self.image = self.animation_frames[int(self.animation_index)]
+        # Animate slime
+        elif self.type == "slime":
+            # Animate slime
+            self.animation_index += 0.08
+            if self.animation_index >= len(self.animation_frames):
+                self.animation_index = 0
+            self.image = self.animation_frames[int(self.animation_index)]
+        elif self.type == "flyfly":
+            # Animate Fly2
+            self.animation_index += 0.08
+            if self.animation_index >= len(self.animation_frames):
+                self.animation_index = 0
+            self.image = self.animation_frames[int(self.animation_index)]
+        elif self.type == "Bee":
+            # Animate Bee
+            self.animation_index += 0.08
             if self.animation_index >= len(self.animation_frames):
                 self.animation_index = 0
             self.image = self.animation_frames[int(self.animation_index)]
@@ -132,7 +167,27 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.obstacle_animation()
-        self.rect.x -= 6
+        # If obstacle is flyfly, make it fly up and down based on a random y range
+        if self.type == "flyfly":
+            self.rect.x -= 6
+            self.rect.y += 2
+            if self.rect.bottom >= randint(220, 310):
+                self.rect.y -= 2
+        # If obstacle is a bee, make it continuously fly up and down
+        elif self.type == "Bee":
+            self.rect.x -= 6
+            self.rect.y += 1.4 * self.fly_direction
+
+            # Change fly direction when it reaches the top or bottom values
+            if self.rect.bottom >= randint(170, 205):
+                self.fly_direction = -1  # Change direction to up
+            elif self.rect.bottom <= randint(35, 55):
+                self.fly_direction = 1  # Change direction to down
+
+        # For any other types of obstacles
+        else:
+            self.rect.x -= 6
+
         self.remove()
 
 
@@ -181,7 +236,7 @@ def display_score():
 def handle_start_screen():
     display.screen.fill((90, 130, 155))
     # Initial Player Icon
-    player_stand_start = pygame.image.load("graphics/Player/p3_stand.png").convert_alpha()
+    player_stand_start = pygame.image.load("graphics/Player/p3_front.png").convert_alpha()
     # Scale player icon to double size
     player_stand_start = pygame.transform.scale2x(player_stand_start)
     # Set player icon to center of screen
@@ -211,7 +266,7 @@ def handle_start_screen():
 def handle_game_over_screen(score):
     display.screen.fill((90, 130, 155))
     # Initial Player Icon
-    player_stand_start = pygame.image.load("graphics/Player/p3_stand.png").convert_alpha()
+    player_stand_start = pygame.image.load("graphics/Player/p3_duck.png").convert_alpha()
     # Scale player icon to double size
     player_stand_start = pygame.transform.scale2x(player_stand_start)
     # Set player icon to center of screen
@@ -304,12 +359,6 @@ player_stand_surface = pygame.image.load("graphics/Player/p3_walk/PNG/p3_walk02.
 # Obstacle_timer
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer, 1500)
-# Snail animation timer
-snail_animation_timer = pygame.USEREVENT + 2
-pygame.time.set_timer(snail_animation_timer, 495)
-# Fly animation timer
-fly_animation_timer = pygame.USEREVENT + 3
-pygame.time.set_timer(fly_animation_timer, 330)
 
 # Game loop
 while True:
@@ -341,8 +390,8 @@ while True:
         if event.type == obstacle_timer and game_state:
             # Choose random obstacle to add to list using obstacle group
             # Define obstacle types and their corresponding probabilities
-            obstacle_types = ["snail", "fly"]
-            probabilities = [0.75, 0.25]  # Adjust these probabilities as needed
+            obstacle_types = ["snail", "fly", "slime", "flyfly", "Bee"]
+            probabilities = [0.3, 0.2, 0.15, 0.1, 0.15]  # Adjust these probabilities as needed
             # Randomly choose the type of obstacle based on probabilities
             obstacle_type = choices(obstacle_types, probabilities, k=1)[0]
             # Add the selected obstacle to the obstacle group
