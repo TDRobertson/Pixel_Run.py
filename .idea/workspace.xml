@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8d445143-3fdb-4e51-b2f8-a9d1a907e95e" name="Changes" comment="Code Cleanup and finalized version" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="New_Obstacles" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2Zmd3IhTgkEQm0aL5Zqa9Op3xjP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Pixel_Run.executor&quot;: &quot;Run&quot;,
+    &quot;Python.runner.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/thoma/Desktop/Pixel Runner&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-7a29c1521ef0-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.298" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8d445143-3fdb-4e51-b2f8-a9d1a907e95e" name="Changes" comment="" />
+      <created>1703030988644</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1703030988644</updated>
+      <workItem from="1703030989782" duration="1540000" />
+      <workItem from="1703032550275" duration="5730000" />
+      <workItem from="1703105240261" duration="8426000" />
+      <workItem from="1703132941898" duration="1647000" />
+      <workItem from="1703178854507" duration="11813000" />
+      <workItem from="1703218536383" duration="786000" />
+      <workItem from="1703274782744" duration="22365000" />
+      <workItem from="1703303436374" duration="86000" />
+      <workItem from="1703307721399" duration="781000" />
+    </task>
+    <task id="LOCAL-00001" summary="Added new features">
+      <option name="closed" value="true" />
+      <created>1703045349422</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1703045349422</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added fail/continue state, gravity">
+      <option name="closed" value="true" />
+      <created>1703134579962</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1703134579962</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Optimized game states and added score tracking and game over/continue screens">
+      <option name="closed" value="true" />
+      <created>1703181989107</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1703181989107</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added obstacle_list function to spawn enemies">
+      <option name="closed" value="true" />
+      <created>1703200258747</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1703200258747</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Removed obstacle_list temporarily">
+      <option name="closed" value="true" />
+      <created>1703203245786</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1703203245786</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Updated and fixed obstacle list, obstacle collision, and player reset status">
+      <option name="closed" value="true" />
+      <created>1703219316833</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1703219316833</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added player/obstacle animations, somehow broke continue screen.">
+      <option name="closed" value="true" />
+      <created>1703278443639</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1703278443639</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added Player sprite class to hold all functions related to player">
+      <option name="closed" value="true" />
+      <created>1703287645273</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1703287645273</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Finalized Obstacle sprite class">
+      <option name="closed" value="true" />
+      <created>1703289426070</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1703289426070</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Cleaned up redundant code">
+      <option name="closed" value="true" />
+      <created>1703290328560</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1703290328560</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Cleaned up redundant code">
+      <option name="closed" value="true" />
+      <created>1703295201953</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1703295201953</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Finalized code cleanup">
+      <option name="closed" value="true" />
+      <created>1703295713779</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1703295713779</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Changes player gravity values when jumping">
+      <option name="closed" value="true" />
+      <created>1703296068607</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1703296068607</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added new enemies and flight logic">
+      <option name="closed" value="true" />
+      <created>1703300485683</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1703300485683</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Added background movement">
+      <option name="closed" value="true" />
+      <created>1703301639054</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1703301639054</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Code Cleanup and finalized version">
+      <option name="closed" value="true" />
+      <created>1703302245087</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1703302245087</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added new features" />
+    <MESSAGE value="Added fail/continue state, gravity" />
+    <MESSAGE value="Optimized game states and added score tracking and game over/continue screens" />
+    <MESSAGE value="Added obstacle_list function to spawn enemies" />
+    <MESSAGE value="Removed obstacle_list temporarily" />
+    <MESSAGE value="Updated and fixed obstacle list, obstacle collision, and player reset status" />
+    <MESSAGE value="Added player/obstacle animations, somehow broke continue screen." />
+    <MESSAGE value="Added Player sprite class to hold all functions related to player" />
+    <MESSAGE value="Finalized Obstacle sprite class" />
+    <MESSAGE value="Cleaned up redundant code" />
+    <MESSAGE value="Finalized code cleanup" />
+    <MESSAGE value="Changes player gravity values when jumping" />
+    <MESSAGE value="Added new enemies and flight logic" />
+    <MESSAGE value="Added background movement" />
+    <MESSAGE value="Code Cleanup and finalized version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code Cleanup and finalized version" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Pixel_Run_py$Pixel_Run.coverage" NAME="Pixel_Run Coverage Results" MODIFIED="1703308173304" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Pixel_Runner$Pixel_Run.coverage" NAME="Pixel_Run Coverage Results" MODIFIED="1703032441377" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Pixel_Run_py$runner.coverage" NAME="runner Coverage Results" MODIFIED="1703294038198" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Pygame Intro Project" />
+  </component>
+</project>
